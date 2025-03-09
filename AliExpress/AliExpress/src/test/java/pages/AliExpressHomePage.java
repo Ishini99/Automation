@@ -8,27 +8,48 @@ import utilities.LoggerUtils;
 
 public class AliExpressHomePage extends BasePage {
 
+    @FindBy(xpath = "//input[@placeholder='Search in AliExpress']")
+    private WebElement searchBox;
 
+    @FindBy(xpath = "//button[contains(@class,'search-button')]")
+    private WebElement searchButton;
 
-    @FindBy(xpath = "//input[@placeholder='Search in Ali Express']")
-    public WebElement searchBox;
+    @FindBy(xpath = "//span[text()='Help & Support']")
+    private WebElement helpAndSupport;
 
-    @FindBy(xpath = "//a[@tabindex='2']")
-    public WebElement searchButton;
+    @FindBy(xpath = "//a[text()='Help Center']")
+    private WebElement selectHelpCenterHref;
 
-    @FindBy(xpath = "//span[text()= 'Help & Support']")
-    public WebElement helpAndSupport;
+    @FindBy(xpath = "//button[contains(@class, 'categories-button')]")
+    private WebElement allCategoriesDropdown;
 
-    @FindBy(xpath = " //a[text()='Help Center']")
-    public WebElement selectHelpCenterHref;
+    @FindBy(xpath = "//a[contains(text(), 'Bundle deals')]")
+    private WebElement bundleDealsLink;
 
+    @FindBy(xpath = "//a[contains(text(), 'Top Brands')]")
+    private WebElement topBrandsLink;
 
-    String visibleText = "";
+    @FindBy(xpath = "//h2[contains(text(), 'Today’s deals')]")
+    private WebElement todaysDealsHeading;
+
+    @FindBy(xpath = "//a[contains(text(), 'Sign in / Register')]")
+    private WebElement signInRegisterButton;
+
+    @FindBy(xpath = "//a[contains(@href, 'cart')]")
+    private WebElement cartButton;
+
+    @FindBy(xpath = "//a[contains(text(), 'Download the AliExpress app')]")
+    private WebElement downloadAppLink;
+
+    @FindBy(xpath = "//div[contains(@class, 'currency-language-dropdown')]")
+    private WebElement languageCurrencyDropdown;
+
+    private String visibleText = "";
 
     public AliExpressHomePage(WebDriver driver) {
         super(driver);
+        PageFactory.initElements(driver, this);
     }
-
 
     public void setSearchText(String searchText) {
         try {
@@ -43,19 +64,20 @@ public class AliExpressHomePage extends BasePage {
         try {
             searchButton.click();
 
-            if (visibleText.equals("Earrings")) {
-                return (T) PageFactory.initElements(driver, AliExpressAccessoriesPage.class);
-            } else if (visibleText.equals("Flowers")) {
-                return (T) PageFactory.initElements(driver, AliExpressBagsPage.class);
-            } else if (visibleText.equals("Flowers")) {
-                return (T) PageFactory.initElements(driver,AliExpressShoesPage.class);
-            } else if (visibleText.equals("Flowers")) {
-                return (T) PageFactory.initElements(driver,AliExpressHomeAndGarden.class);
-            }  else  {
-            return (T) PageFactory.initElements(driver,AliExpressHelpPage.class);
-        }
+            switch (visibleText.toLowerCase()) {
+                case "earrings":
+                    return (T) PageFactory.initElements(driver, AliExpressAccessoriesPage.class);
+                case "flowers":
+                    return (T) PageFactory.initElements(driver, AliExpressBagsPage.class);
+                case "shoes":
+                    return (T) PageFactory.initElements(driver, AliExpressShoesPage.class);
+                case "home and garden":
+                    return (T) PageFactory.initElements(driver, AliExpressHomeAndGarden.class);
+                default:
+                    return (T) PageFactory.initElements(driver, AliExpressHelpPage.class);
+            }
         } catch (Exception e) {
-            LoggerUtils.logError("Error clicking search button for visibleText: " + visibleText, e);
+            LoggerUtils.logError("Error clicking search button for text: " + visibleText, e);
             return null;
         }
     }
@@ -78,4 +100,59 @@ public class AliExpressHomePage extends BasePage {
         }
     }
 
+    public void openCategoriesDropdown() {
+        try {
+            allCategoriesDropdown.click();
+        } catch (Exception e) {
+            LoggerUtils.logError("Error clicking Categories Dropdown", e);
+        }
+    }
+
+    public void clickBundleDeals() {
+        try {
+            bundleDealsLink.click();
+        } catch (Exception e) {
+            LoggerUtils.logError("Error clicking Bundle Deals", e);
+        }
+    }
+
+    public void clickTopBrands() {
+        try {
+            topBrandsLink.click();
+        } catch (Exception e) {
+            LoggerUtils.logError("Error clicking Top Brands", e);
+        }
+    }
+
+    public void clickSignInRegister() {
+        try {
+            signInRegisterButton.click();
+        } catch (Exception e) {
+            LoggerUtils.logError("Error clicking Sign In / Register", e);
+        }
+    }
+
+    public void clickCart() {
+        try {
+            cartButton.click();
+        } catch (Exception e) {
+            LoggerUtils.logError("Error clicking Cart button", e);
+        }
+    }
+
+    public void clickDownloadApp() {
+        try {
+            downloadAppLink.click();
+        } catch (Exception e) {
+            LoggerUtils.logError("Error clicking Download App link", e);
+        }
+    }
+
+    public void openLanguageCurrencyDropdown() {
+        try {
+            languageCurrencyDropdown.click();
+        } catch (Exception e) {
+            LoggerUtils.logError("Error opening Language & Currency dropdown", e);
+        }
+    }
 }
